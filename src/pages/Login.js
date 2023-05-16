@@ -57,8 +57,10 @@ class Login extends React.Component {
             onChange={ this.handlerInput }
           />
           <br />
-          <button onClick={ this.UserName } disabled={ inputButton }
-          data-testid="login-submit-button"
+          <button
+            onClick={ this.UserName }
+            disabled={ inputButton }
+            data-testid="login-submit-button"
           >
             Entrar
           </button>
