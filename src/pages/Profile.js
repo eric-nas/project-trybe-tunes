@@ -3,10 +3,7 @@ import React from 'react';
 class Profile extends React.Component {
   render() {
     return (
-      <div data-testid="page-profile">
-        <p>asdasdas</p>
-        AAAAAA
-      </div>
+      <div data-testid="page-profile" />
     );
   }
 }

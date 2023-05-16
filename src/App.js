@@ -7,11 +7,13 @@ import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import PageNotFound from './pages/PageNotFound';
+import Header from './Components/Header';
 
 class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
+        <Header> </Header>
         <Switch>
           <Route exact path="/profile" component={ Profile } />
           <Route exact path="/search" component={ Search } />

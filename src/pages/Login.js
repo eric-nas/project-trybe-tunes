@@ -24,10 +24,10 @@ class Login extends React.Component {
   }
 
   handlerInput = (event) => {
-    const { type, checked, value } = event.target;
+    const { type, checked, value, name } = event.target;
     const values = type === 'checkbox' ? checked : value;
     this.setState({
-      input: values,
+      [name]: values,
     });
   };
 
@@ -42,7 +42,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const { inputButton, loggin } = this.state;
+    const { inputButton, loggin, input } = this.state;
     if (loggin) {
       return <p>Carregando...</p>;
     }
@@ -54,6 +54,8 @@ class Login extends React.Component {
             data-testid="login-name-input"
             type="text"
             id="name"
+            name="input"
+            value={ input }
             onChange={ this.handlerInput }
           />
           <br />
