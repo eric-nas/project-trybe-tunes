@@ -8,11 +8,12 @@ class Album extends React.Component {
     artistName: '',
     collectionName: '',
     resultApi: [],
-
+    load: false,
   };
 
   async componentDidMount() {
     const { match: { params: { id } } } = this.props;
+
     const result = await getMusics(id);
     const resultApi = result;
     this.setState({ resultApi }, () => this.setState({
@@ -22,7 +23,10 @@ class Album extends React.Component {
   }
 
   render() {
-    const { artistName, collectionName, resultApi } = this.state;
+    const { artistName, collectionName, resultApi, load } = this.state;
+    if (load) {
+      return <p>Carregando...</p>;
+    }
     return (
       <div data-testid="page-album">
         <h1 data-testid="artist-name">{ artistName }</h1>

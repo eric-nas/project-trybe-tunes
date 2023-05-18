@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class MusicCard extends React.Component {
   state = {
@@ -8,9 +8,18 @@ class MusicCard extends React.Component {
     check: {
       0: false,
     },
+    favoriteMusic: [],
   };
 
-  checkedFavorite = async (event) => {
+  async componentDidMount() {
+    const results = await getFavoriteSongs();
+    this.setState({
+      load: false,
+      favoriteMusic: results,
+    });
+  }
+
+  checkedFavorite = async (event, music) => {
     const { type, checked, value, name } = event.target;
     const values = type === 'checkbox' ? checked : value;
     this.setState((prevState) => ({
@@ -20,8 +29,17 @@ class MusicCard extends React.Component {
       },
       load: true,
     }));
-    const { musics } = this.props;
-    await addSong(musics);
+
+    try {
+      if (checked) {
+        await addSong(music);
+        this.setState({
+          load: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
     this.setState({
       load: false,
     });
@@ -29,7 +47,7 @@ class MusicCard extends React.Component {
 
   render() {
     const { musics } = this.props;
-    const { load, check } = this.state;
+    const { load, check, favoriteMusic } = this.state;
     if (load) {
       return <p>Carregando...</p>;
     }
@@ -52,11 +70,12 @@ class MusicCard extends React.Component {
               </audio>
               <label htmlFor="Favorita">
                 <input
-                  onChange={ this.checkedFavorite }
+                  onChange={ (event) => this.checkedFavorite(event, music) }
                   data-testid={ `checkbox-music-${music.trackId}` }
                   type="checkbox"
                   name={ index }
-                  checked={ check[index] }
+                  checked={ favoriteMusic.some((item) => item.trackId === music.trackId)
+                    ? true : check[index] }
                 />
               </label>
               {' '}
