@@ -19,7 +19,6 @@ class Album extends React.Component {
       artistName: result[0].artistName,
       collectionName: result[0].collectionName,
     }));
-    console.log(result);
   }
 
   render() {
