@@ -59,7 +59,7 @@ class MusicCard extends React.Component {
     }
     return (
       <div>
-        {musics.map((music, index) => (index > 0 ? (
+        {musics.map((music, index) => (music.trackName ? (
           <div key={ index }>
             <p>
               {music.trackName}
@@ -74,8 +74,10 @@ class MusicCard extends React.Component {
                 <code>audio</code>
                 .
               </audio>
-              <label htmlFor="Favorita">
+              <label htmlFor={ music.trackId }>
+                Favorita
                 <input
+                  id={ music.trackId }
                   onChange={ (event) => this.checkedFavorite(event, music) }
                   data-testid={ `checkbox-music-${music.trackId}` }
                   type="checkbox"
