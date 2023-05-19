@@ -7,6 +7,9 @@ class Login extends React.Component {
     inputButton: true,
     input: '',
     loggin: false,
+    email: '',
+    image: '',
+    description: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -23,6 +26,19 @@ class Login extends React.Component {
     }
   }
 
+  handlerFileInput = (event) => {
+    const arquivo = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const images = e.target.result;
+      this.setState({
+        image: images,
+      });
+    };
+    reader.readAsDataURL(arquivo);
+  };
+
   handlerInput = (event) => {
     const { type, checked, value, name } = event.target;
     const values = type === 'checkbox' ? checked : value;
@@ -32,17 +48,20 @@ class Login extends React.Component {
   };
 
   UserName = async () => {
-    const { input } = this.state;
+    const { input, email, image, description } = this.state;
     const { history } = this.props;
     this.setState({
       loggin: true,
     });
-    await createUser({ name: input });
+    await createUser({ name: input,
+      email,
+      image,
+      description });
     history.push('/search');
   };
 
   render() {
-    const { inputButton, loggin, input } = this.state;
+    const { inputButton, loggin, input, email, description, image } = this.state;
     if (loggin) {
       return <p>Carregando...</p>;
     }
@@ -50,14 +69,53 @@ class Login extends React.Component {
 
       <div data-testid="page-login">
         <form>
-          <input
-            data-testid="login-name-input"
-            type="text"
-            id="name"
-            name="input"
-            value={ input }
-            onChange={ this.handlerInput }
-          />
+          <label>
+            {' '}
+            Nome:
+            <input
+              data-testid="login-name-input"
+              type="text"
+              id="name"
+              name="input"
+              value={ input }
+              onChange={ this.handlerInput }
+            />
+          </label>
+          {' '}
+          <br />
+          <label>
+            {' '}
+            Email:
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={ email }
+              onChange={ this.handlerInput }
+            />
+          </label>
+          {' '}
+          <br />
+          <label>
+            {' '}
+            Photo:
+            <br />
+            <input type="file" onChange={ this.handlerFileInput } />
+            <img src={ image } alt="Profile" />
+          </label>
+          {' '}
+          <br />
+          <labe>
+            {' '}
+            Descrição:
+            <br />
+            <textarea
+              id="description"
+              name="description"
+              value={ description }
+              onChange={ this.handlerInput }
+            />
+          </labe>
           <br />
           <button
             onClick={ this.UserName }
