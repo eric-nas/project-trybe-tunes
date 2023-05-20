@@ -16,7 +16,6 @@ class Profile extends React.Component {
       load: true,
     });
     const result = await getUser();
-    console.log(result.description);
     this.setState({
       load: false,
       name: result.name,
