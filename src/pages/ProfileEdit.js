@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getUser, updateUser } from '../services/userAPI';
+import Header from '../Components/Header';
 
 class ProfileEdit extends React.Component {
   state = {
     load: false,
     name: '',
     email: '',
-    description: '',
     image: '',
     button: false,
   };
@@ -28,10 +28,9 @@ class ProfileEdit extends React.Component {
 
   hanlderChange = (event) => {
     const { type, value, checked } = event.target;
-    const { name, description, email, image } = this.state;
+    const { name, email } = this.state;
     const emailValid = this.validateEmail(email);
-    if (name.length > 0 && description.length > 0
-      && email.length > 0 && image.length > 0 && emailValid) {
+    if (name.length > 0 && email.length > 0 && emailValid) {
       this.setState({
         button: false,
       });
@@ -44,6 +43,19 @@ class ProfileEdit extends React.Component {
     this.setState({
       [event.target.name]: values,
     });
+  };
+
+  handlerFileInput = (event) => {
+    const arquivo = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const images = e.target.result;
+      this.setState({
+        image: images,
+      });
+    };
+    reader.readAsDataURL(arquivo);
   };
 
   UserName = async () => {
@@ -65,29 +77,33 @@ class ProfileEdit extends React.Component {
   }
 
   render() {
-    const { load, name, email, description, image, button } = this.state;
+    const { load, name, email, image, button } = this.state;
     if (load) {
-      return <p>Carregando...</p>;
+      return <div className="spinner-pages" />;
     }
     return (
       <div data-testid="page-profile-edit">
-        <form>
+        <Header />
+        <form className="profile-edit-form">
+          <label className="profile-edit-image">
+            <input type="file" accept="image/*" onChange={ this.handlerFileInput } />
+            <img src={ image } alt="" className="perfilimg" />
+          </label>
           <label>
-            Nome:
-            <br />
+            <p className="name">NOME:</p>
             <input
+              type="text"
               data-testid="edit-input-name"
               value={ name }
               name="name"
               onChange={ this.hanlderChange }
             />
           </label>
-          {' '}
           <br />
           <label>
-            Email:
-            <br />
+            <p className="email">E-MAIL:</p>
             <input
+              type="text"
               data-testid="edit-input-email"
               value={ email }
               name="email"
@@ -96,26 +112,6 @@ class ProfileEdit extends React.Component {
           </label>
           {' '}
           <br />
-          <label>
-            Descrição:
-            <br />
-            <textarea
-              data-testid="edit-input-description"
-              value={ description }
-              name="description"
-              onChange={ this.hanlderChange }
-            />
-          </label>
-          {' '}
-          <br />
-          <input
-            data-testid="edit-input-image"
-            type="text"
-            onChange={ this.hanlderChange }
-            name="image"
-            value={ image }
-          />
-          <img src={ image } alt="Profile" />
           {' '}
           <br />
           <button

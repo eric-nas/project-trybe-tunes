@@ -55,18 +55,23 @@ class MusicCard extends React.Component {
     const { musics } = this.props;
     const { load, check, favoriteMusic } = this.state;
     if (load) {
-      return <p>Carregando...</p>;
+      return <div className="spinner-login" />;
     }
     return (
-      <div>
+      <div className="music-card">
         {musics.map((music, index) => (music.trackName ? (
           <div key={ index }>
-            <p>
+            <p className="music-card-name">
               {music.trackName}
               {' '}
             </p>
             <p>
-              <audio data-testid="audio-component" src={ music.previewUrl } controls>
+              <audio
+                className="audio"
+                data-testid="audio-component"
+                src={ music.previewUrl }
+                controls
+              >
                 <track kind="captions" />
                 O seu navegador não suporta o elemento
                 {' '}
@@ -74,18 +79,17 @@ class MusicCard extends React.Component {
                 <code>audio</code>
                 .
               </audio>
-              <label htmlFor={ music.trackId }>
-                Favorita
-                <input
-                  id={ music.trackId }
-                  onChange={ (event) => this.checkedFavorite(event, music) }
-                  data-testid={ `checkbox-music-${music.trackId}` }
-                  type="checkbox"
-                  name={ index }
-                  checked={ favoriteMusic.some((item) => item.trackId === music.trackId)
-                    ? true : check[index] }
-                />
-              </label>
+              <input
+                className="checkbox"
+                id={ music.trackId }
+                onChange={ (event) => this.checkedFavorite(event, music) }
+                data-testid={ `checkbox-music-${music.trackId}` }
+                type="checkbox"
+                name={ index }
+                checked={ favoriteMusic.some((item) => item.trackId === music.trackId)
+                  ? true : check[index] }
+              />
+              <label className="heart-checkbox" htmlFor={ music.trackId }> </label>
               {' '}
             </p>
           </div>) : <p key={ index } />))}

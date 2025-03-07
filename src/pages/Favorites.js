@@ -1,6 +1,7 @@
 import React from 'react';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 import MusicCard from '../Components/MusicCard';
+import Header from '../Components/Header';
 
 class Favorites extends React.Component {
   state = {
@@ -36,10 +37,11 @@ class Favorites extends React.Component {
   render() {
     const { load, MusicFavorite } = this.state;
     if (load) {
-      <p>Carregando...</p>;
+      <div className="spinner-login" />;
     }
     return (
       <div data-testid="page-favorites">
+        <Header />
         <MusicCard musics={ MusicFavorite } />
       </div>
     );

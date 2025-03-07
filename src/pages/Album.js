@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import getMusics from '../services/musicsAPI';
 import MusicCard from '../Components/MusicCard';
+import Header from '../Components/Header';
 
 class Album extends React.Component {
   state = {
@@ -25,12 +26,15 @@ class Album extends React.Component {
   render() {
     const { artistName, collectionName, resultApi, load } = this.state;
     if (load) {
-      return <p>Carregando...</p>;
+      return <div className="spinner-pages" />;
     }
     return (
-      <div data-testid="page-album">
-        <h1 data-testid="artist-name">{ artistName }</h1>
-        <h1 data-testid="album-name">{collectionName}</h1>
+      <div>
+        <Header />
+        <div className="album-details" data-testid="page-album">
+          <h1 data-testid="artist-name">{ artistName }</h1>
+          <h1 data-testid="album-name">{collectionName}</h1>
+        </div>
         <MusicCard musics={ resultApi } />
       </div>
     );

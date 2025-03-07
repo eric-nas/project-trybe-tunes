@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import Header from '../Components/Header';
 
 class Search extends React.Component {
   state = {
@@ -63,40 +64,50 @@ class Search extends React.Component {
   render() {
     const { artist, button, search, artistName, resultApi, request } = this.state;
     if (search) {
-      return <p>...Carregando</p>;
+      return <div className="spinner-pages" />;
     }
     return (
       <div data-testid="page-search">
+        <Header />
         <form>
-          <input
-            name="artist"
-            value={ artist }
-            onChange={ this.handlerInput }
-            data-testid="search-artist-input"
-          />
-          <button
-            data-testid="search-artist-button"
-            disabled={ button }
-            onClick={ this.searchArtist }
-          >
-            Pesquisar
-          </button>
+          <div className="search-bar">
+            <input
+              className="search-input"
+              type="text"
+              name="artist"
+              value={ artist }
+              onChange={ this.handlerInput }
+              data-testid="search-artist-input"
+            />
+            <button
+              className="search-button"
+              data-testid="search-artist-button"
+              disabled={ button }
+              onClick={ this.searchArtist }
+            >
+              Pesquisar
+            </button>
+          </div>
 
-          {!request ? <p>Nenhum álbum foi encontrado</p> : (
+          {!request ? <h3 className="no-search">Nenhum álbum foi encontrado</h3> : (
             <div>
-              <h2>{`Resultado de álbuns de: ${artistName}`}</h2>
-              {resultApi.map((result) => (
-                <div key={ result.collectionId }>
-                  <img src={ result.artworkUrl100 } alt="album" />
-                  <p>{ result.collectionName }</p>
-                  <h3>{ result.artistName }</h3>
-                  <Link
-                    to={ `/album/${result.collectionId}` }
-                    data-testid={ `link-to-album-${result.collectionId}` }
-                  >
-                    Link
-                  </Link>
-                </div>))}
+              <h1 className="result-search">
+                { artistName.length >= 1 ? `Resultado de álbuns de: ${artistName}` : ''}
+              </h1>
+              <div className="album-container">
+                {resultApi.map((result) => (
+                  <div className="albuns" key={ result.collectionId }>
+                    <img src={ result.artworkUrl100 } alt="album" />
+                    <p>{ result.collectionName }</p>
+                    <h3>{ result.artistName }</h3>
+                    <Link
+                      to={ `/album/${result.collectionId}` }
+                      data-testid={ `link-to-album-${result.collectionId}` }
+                    >
+                      Link
+                    </Link>
+                  </div>))}
+              </div>
             </div>)}
         </form>
       </div>

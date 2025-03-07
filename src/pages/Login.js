@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
+import perfilImage from '../images/perfil.png';
 
 class Login extends React.Component {
   state = {
@@ -8,21 +9,21 @@ class Login extends React.Component {
     input: '',
     loggin: false,
     email: '',
-    image: '',
+    image: perfilImage,
     description: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { input } = this.state;
+    const { input, email } = this.state;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validateEmail = emailRegex.test(email);
     const value = 3;
-    if (prevState.input !== input && input.length > 2) {
-      this.setState({
-        inputButton: false,
-      });
-    } if (prevState.input !== input && input.length < value) {
-      this.setState({
-        inputButton: true,
-      });
+    if (prevState.input !== input || prevState.email !== email) {
+      if (input.length > 2 && validateEmail) {
+        this.setState({ inputButton: false });
+      } else if (input.length < value && !validateEmail) {
+        this.setState({ inputButton: true });
+      }
     }
   }
 
@@ -40,6 +41,7 @@ class Login extends React.Component {
   };
 
   handlerInput = (event) => {
+    console.log(this.state);
     const { type, checked, value, name } = event.target;
     const values = type === 'checkbox' ? checked : value;
     this.setState({
@@ -60,23 +62,32 @@ class Login extends React.Component {
     history.push('/search');
   };
 
+  validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   render() {
-    const { inputButton, loggin, input, email, description, image } = this.state;
+    const { inputButton, loggin, input, email, image } = this.state;
     if (loggin) {
-      return <p>Carregando...</p>;
+      return <div className="spinner-pages" />;
     }
     return (
 
-      <div data-testid="page-login">
+      <div data-testid="page-login" className="page-login">
         <form>
+          <label className="image">
+            <input type="file" accept="image/*" onChange={ this.handlerFileInput } />
+            <img src={ image } alt="" className="perfilimg" />
+          </label>
+          <br />
           <label>
-            {' '}
-            Nome:
             <input
               data-testid="login-name-input"
               type="text"
               id="name"
               name="input"
+              placeholder="Digite seu Nome"
               value={ input }
               onChange={ this.handlerInput }
             />
@@ -85,39 +96,22 @@ class Login extends React.Component {
           <br />
           <label>
             {' '}
-            Email:
             <input
-              type="email"
+              type="text"
               id="email"
               name="email"
+              placeholder="Digite seu Email"
               value={ email }
               onChange={ this.handlerInput }
             />
           </label>
           {' '}
           <br />
-          <label>
-            {' '}
-            Photo:
-            <br />
-            <input type="file" onChange={ this.handlerFileInput } />
-            <img src={ image } alt="Profile" />
-          </label>
           {' '}
           <br />
-          <labe>
-            {' '}
-            Descrição:
-            <br />
-            <textarea
-              id="description"
-              name="description"
-              value={ description }
-              onChange={ this.handlerInput }
-            />
-          </labe>
-          <br />
           <button
+            id="login-button"
+            style={ { cursor: inputButton ? 'not-allowed' : 'pointer' } }
             onClick={ this.UserName }
             disabled={ inputButton }
             data-testid="login-submit-button"
